@@ -1,0 +1,114 @@
+<header id="header" class="fixed-top">
+  <div class="container d-flex align-items-center justify-content-lg-between">
+    <h1 class="logo me-auto me-lg-0">
+      <a href="index.html">Investify<span>.</span></a>
+    </h1>
+    <nav id="navbar" class="navbar order-last order-lg-0">
+      <i class="bi bi-list mobile-nav-toggle"></i>
+    </nav>
+    <a routerLink="/portfolios" class="get-started-btn scrollto"
+      >Your Portfolios</a
+    >
+  </div>
+</header>
+
+<section class="data">
+  <div
+    class="card text-center"
+    style="width: 18rem"
+    *ngFor="let pf of portfolios"
+  >
+    <div class="card-body">
+      <span><a (click)="deletePortfolio(pf.portfolioId)">X</a></span>
+
+      <h3 class="card-title">{{ pf.portfolioName }}</h3>
+      <p class="card-text">{{ pf.description }}</p>
+      <a class="btn btn-primary" [routerLink]="['/viewstocks', pf.portfolioId]"
+        >View</a
+      >
+    </div>
+  </div>
+</section>
+
+<section>
+  <!-- Button trigger modal -->
+  <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal"
+  >
+    <mat-icon style="height: 22px; vertical-align: text-bottom">add</mat-icon>
+    Portfolio
+  </button>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">New Portfolio</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="portfolioForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="portfolioName"><h3>Portfolio Name</h3></label>
+              <input
+                type="text"
+                class="form-control"
+                id="portfolioName"
+                formControlName="portfolioName"
+                placeholder="Enter Portfolio Name"
+              />
+              <div
+                *ngIf="
+                  portfolioForm.get('portfolioName')?.invalid &&
+                  portfolioForm.get('portfolioName')?.touched
+                "
+                class="invalid-feedback"
+              >
+                Portfolio Name is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="portfolioDescription"
+                ><h3>Portfolio Description</h3></label
+              >
+              <textarea
+                class="form-control"
+                id="portfolioDescription"
+                formControlName="portfolioDescription"
+                rows="3"
+                placeholder="Enter Portfolio Description"
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary" (click)="onSubmit()">
+            Save changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

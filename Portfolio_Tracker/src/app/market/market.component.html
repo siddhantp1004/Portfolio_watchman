@@ -1,0 +1,183 @@
+<header id="header" class="fixed-top">
+  <div class="container d-flex align-items-center justify-content-lg-between">
+    <h1 class="logo me-auto me-lg-0">
+      <a href="index.html">Investify<span>.</span></a>
+    </h1>
+
+    <div class="navbuttons">
+      <a routerLink="/portfolios" class="get-started-btn scrollto"
+        >Your Portfolios</a
+      >
+      <a (click)="logout()" class="get-started-btn scrollto">Log Out</a>
+    </div>
+  </div>
+</header>
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <section class="chips">
+        <h1><b>Market Trends</b></h1>
+        <mat-chip-listbox>
+          <mat-chip [ariaChecked]="true"
+            style="background-color: rgb(255, 208, 116)"
+            (click)="filterStocks('active')" 
+            ><mat-icon style="vertical-align: text-bottom; height: 20px">
+              bar_chart</mat-icon
+            >
+            Most Active</mat-chip
+          >
+          <mat-chip
+            style="background-color: rgb(255, 208, 116)"
+            (click)="filterStocks('gainers')"
+            ><mat-icon
+              style="
+                vertical-align: text-bottom;
+                height: 20px;
+                color: greenyellow;
+              "
+            >
+              trending_up</mat-icon
+            >
+            Gainers</mat-chip
+          >
+          <mat-chip
+            style="background-color: rgb(255, 208, 116)"
+            (click)="filterStocks('losers')"
+            ><mat-icon
+              style="vertical-align: text-bottom; height: 20px; color: red"
+            >
+              trending_down</mat-icon
+            >
+            Losers</mat-chip
+          >
+          <mat-chip
+            style="background-color: rgb(255, 208, 116)"
+            (click)="filterStocks('currencies')"
+            ><mat-icon
+              style="vertical-align: text-bottom; height: 20px; color: red"
+            >
+              attach_money</mat-icon
+            >
+            Currencies</mat-chip
+          >
+        </mat-chip-listbox>
+
+        <div *ngIf="activeStocks?.length > 0">
+          <h2>Most Active Stocks</h2>
+          <h4>
+            The stocks or funds with the highest trading volume (in shares)
+            during the current trading session
+          </h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let stock of activeStocks">
+                  <td>{{ stock.symbol }}</td>
+                  <td>{{ stock.name }}</td>
+                  <td>{{ stock.price | currency }}</td>
+                  <td>{{ stock.change | currency }}</td>
+                  <td>{{ stock.changesPercentage }}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="gainerStocks?.length > 0">
+          <h2>Gainers</h2>
+          <h4>
+            The top gaining stocks or funds (by percent change) during the
+            current trading session
+          </h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let stock of gainerStocks">
+                  <td>{{ stock.symbol }}</td>
+                  <td>{{ stock.name }}</td>
+                  <td>{{ stock.price | currency }}</td>
+                  <td>{{ stock.change | currency }}</td>
+                  <td>{{ stock.changesPercentage }}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="loserStocks?.length > 0">
+          <h2>Losers</h2>
+          <h4>
+            The top losing stocks or funds (by percent change) during the
+            current trading session
+          </h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let stock of loserStocks">
+                  <td>{{ stock.symbol }}</td>
+                  <td>{{ stock.name }}</td>
+                  <td>{{ stock.price | currency }}</td>
+                  <td>{{ stock.change | currency }}</td>
+                  <td>{{ stock.changesPercentage }}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="forexList?.length > 0">
+          <h2>Foreign Exchange Rates</h2>
+          <h4>Top currency pairs globally</h4>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <tbody>
+                <tr *ngFor="let curr of forexList">
+                  <td>{{ curr.ticker }}</td>
+                  <td>{{ curr.open | currency }}</td>
+                  <td>{{ curr.changes.toFixed(3) }}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="col-4">
+      <section class="news">
+        <h1><b>Market News</b></h1>
+        <div class="card" style="width: 22rem">
+          <div class="card-body" *ngFor="let link of news">
+            <img src={{link.image}} width="300px" height="100px">
+            <a href={{link.url}} target="_blank">
+              <h5 class="card-title">{{ link.category }}</h5>
+              <h3 class="card-subtitle mb-2 text-body-secondary">
+                <b>{{ link.headline }}</b>
+              </h3>
+              <!-- <p>{{link.url}}</p> -->
+            </a>
+            <p class="card-text">{{ link.summary }}</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- <section>
+    <h2>Sector-Wise Market Performance</h2>
+    <div class="index" *ngFor="let index of indices">
+        <mat-card class="example-card">
+            <mat-card-header>
+              <mat-card-title>{{index.sector}}</mat-card-title>
+              <h3>Data {{index.sector}}</h3>
+            </mat-card-header>
+            <mat-card-content>
+                <br>
+              <p  [style.color]="'green'">% Change:-  {{index.changesPercentage}}</p>
+            </mat-card-content>
+
+          </mat-card>
+      </div>
+      <br><br><br><br>
+
+  </section> -->

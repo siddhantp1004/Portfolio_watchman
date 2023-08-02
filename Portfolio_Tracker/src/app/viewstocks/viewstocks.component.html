@@ -1,0 +1,192 @@
+<header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center justify-content-lg-between">
+  
+      <h1 class="logo me-auto me-lg-0"><a href="index.html">Investify<span>.</span></a></h1>
+      <nav id="navbar" class="navbar order-last order-lg-0">
+       
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav>
+      <a routerLink="/portfolios" class="get-started-btn scrollto">
+        Go to My Portfolios
+      </a>
+  
+    </div>
+  
+  </header>
+  
+  <section class="data ">
+  
+    <div class="container" *ngIf="dbstocks.length>0">
+      <div style="height: 350px; width: 350px;" class="charts">
+        <canvas id="pie1"></canvas>
+        <canvas id="pie2"></canvas>
+      </div>
+    </div>
+
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">New Portfolio</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="stockSymbol"><h3>Stock Symbol</h3></label>
+              <input type="text" class="form-control" id="stockSymbol" formControlName="stockSymbol" placeholder="Enter Stock Symbol">
+              <div *ngIf="stockForm.get('stockSymbol')?.invalid && stockForm.get('stockSymbol')?.touched" class="invalid-feedback">
+                Portfolio Name is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="stockName"><h3>Stock Name</h3></label>
+              <input type="text" class="form-control" id="stockName" formControlName="stockName" placeholder="Enter Stock Name">
+              <div *ngIf="stockForm.get('stockName')?.invalid && stockForm.get('stockName')?.touched" class="invalid-feedback">
+                Portfolio Name is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="stockPrice"><h3>Stock Price</h3></label>
+              <input type="text" class="form-control" id="stockPrice" formControlName="stockPrice" placeholder="Enter Stock Price">
+              <div *ngIf="stockForm.get('stockPrice')?.invalid && stockForm.get('stockPrice')?.touched" class="invalid-feedback">
+                Portfolio Name is required.
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="stockQuantity"><h3>Stock Quantity</h3></label>
+              <input type="text" class="form-control" id="stockQuantity" formControlName="stockQuantity" placeholder="Enter Stock Quantity">
+              <div *ngIf="stockForm.get('stockQuantity')?.invalid && stockForm.get('stockQuantity')?.touched" class="invalid-feedback">
+                Portfolio Name is required.
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="onSubmit()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+  <br><br>
+  <h1 style="text-align: center;">Portfolio Analysis</h1>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#exampleModal" style="background-color:  rgb(252,206,115); border-radius: 5px; margin-left: 1200px;">
+   <mat-icon style="height: 22px; vertical-align: text-bottom;">add</mat-icon> Stock
+ </button>
+
+  <br><br>
+
+  <table class="table caption-top table-secondary">
+    <thead>
+      <tr>
+        <th scope="col">Equity Name</th>
+        <th scope="col">Invested Price Per Unit</th>
+        <th scope="col">No. Of Units</th>
+        <th scope="col">Total Invested Amount</th>
+        <th scope="col">Current Price</th>
+        <th scope="col">Current Trade Value</th>
+        <th scope="col">Change</th>
+        <th scope="col">% Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of dbstocks">
+        <td>{{stock.stockName}}</td>
+        <td>{{stock.stockPrice | currency}}</td>
+        <td>{{stock.stockQuantity}}</td>
+        <td>{{stock.stockPrice*stock.stockQuantity | currency}}</td>
+        <td>{{stock.CurrPrice | currency}}</td>
+        <td>{{(stock.CurrPrice*stock.stockQuantity).toFixed(2) | currency}} </td>
+        <td>{{(stock.CurrPrice*stock.stockQuantity-stock.stockPrice*stock.stockQuantity).toFixed(2) | currency}}</td>
+        <td>{{(((stock.CurrPrice-stock.stockPrice)/stock.stockPrice)*100).toFixed(2)}}%</td>
+      </tr>
+      <tr></tr>
+      <tr>
+        <td><b>Portfolio Valuation</b></td>
+        <td><b>{{total1 | currency}}</b></td>
+        <td></td>
+        <td><b>{{portfoliovalue | currency}}</b></td>
+        <td></td>
+        <td><b>{{currentvalue | currency}}</b></td>
+        <td><b>{{currentvalue -portfoliovalue | currency}}</b></td>
+        <td><b>{{(((currentvalue -portfoliovalue)/portfoliovalue)*100).toFixed(2)}}%</b></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div style="text-align: center;">
+    <button mat-fab extended (click)="generate_PDF()" id="pdf">
+      <mat-icon>get_app</mat-icon>
+      Download Portfolio Holding Report
+    </button>
+  </div>
+  <br><br>
+  
+  <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6">
+            <div class="footer-info">
+              <h3>Investify<span>.</span></h3>
+              <p>
+                Blue Ridge Town, Hinjewadi,Pune,India.<br><br>
+                <strong>Phone:</strong> investify@gmail.com <br>
+                <strong>Email:</strong> +91 8888 888 888<br>
+              </p>
+              <div class="social-links mt-3">
+                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-6 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Services</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of service</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+              <li><i class="bx bx-chevron-right"></i> <a href="#"></a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Portfolio Tracking</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Portfolio Analysis</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Real-time Data Syncing</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#">Data Security</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-4 col-md-6 footer-newsletter">
+            <h4>Connect with Us!</h4>
+            <form action="" method="post">
+              <input type="email" name="email"><input type="submit" value="Send">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong><span>Investify</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+      Designed by <a href="https://bootstrapmade.com/">Investify</a>
+      </div>
+    </div>
+</footer>
+<router-outlet></router-outlet>
